@@ -1,0 +1,30 @@
+{
+  "name": "gartic-server",
+  "version": "0.0.1",
+  "description": "handle game connections",
+  "main": "index.js",
+  "author": "sourods",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon",
+    "build": "babel src --watch --out-dir build --extensions \".ts, .tsx\" --source-maps inline"
+  },
+  "dependencies": {
+    "colyseus": "^0.14.14",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.14.5",
+    "@babel/core": "^7.14.6",
+    "@babel/plugin-proposal-decorators": "^7.14.5",
+    "@babel/preset-env": "^7.14.5",
+    "@babel/preset-typescript": "^7.14.5",
+    "@types/cors": "^2.8.10",
+    "@types/express": "^4.17.12",
+    "@types/node": "^15.12.4",
+    "nodemon": "^2.0.7",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.4"
+  }
+}
