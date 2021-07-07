@@ -11,7 +11,7 @@ class Player extends Schema {
 
 class State extends Schema {
     @type({ map: Player })
-    players = new MapSchema<Player>();
+    players = new MapSchema<Player>()
 
     createPlayer(sessionId: string) {
         this.players.set(sessionId, new Player());
@@ -20,31 +20,22 @@ class State extends Schema {
     removePlayer(sessionId: string) {
         this.players.delete(sessionId);
     }
-
-    playerDraw(sessionId: string, { x, y }: any) {
-        const player = this.players.get(sessionId)
-        if(player) {
-            if (x) {
-                player.x = x
-            }
-            if (y) {
-                player.y = y
-            }
-        }
-    }
 }
+
+type canvasCoordinates = Array<{ x?: number, y?: number }> 
 
 export default class CanvasRoom extends Room<State> {
     maxClients = 4;
+    canvasCoordinates: canvasCoordinates = []
 
     onCreate(options: unknown) {
         console.log("CanvasRoom created!", options);
 
         this.setState(new State());
 
-        this.onMessage("canvasUpdate", (client, data) => {
-            console.log("CanvasRoom received canvasUpdate from", client.sessionId, ":", data);
-            this.state.playerDraw(client.sessionId, data);
+        this.onMessage("CanvasUpdate", (client, coordinate) => {
+            this.canvasCoordinates.push(coordinate)
+            this.broadcast("CanvasUpdate", coordinate, { except: client });
         });
     }
 
@@ -54,8 +45,8 @@ export default class CanvasRoom extends Room<State> {
 
     onJoin(client: Client) {
         console.log('players', this.state.players)
-        // client.send("hello", "world");
         this.state.createPlayer(client.sessionId);
+        client.send("CanvasHistory", this.canvasCoordinates);
     }
 
     onLeave(client: Client) {
